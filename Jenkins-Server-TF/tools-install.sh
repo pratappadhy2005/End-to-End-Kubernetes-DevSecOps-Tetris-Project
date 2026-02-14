@@ -6,13 +6,20 @@ sudo apt install fontconfig openjdk-21-jre -y
 java --version
 
 # Installing Jenkins
+# 1) Create keyrings dir (safe even if it already exists)
+sudo mkdir -p /etc/apt/keyrings
+
+# 2) Download the NEW signing key (2026)
 sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
-  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
-  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+
+# 3) Recreate the repo entry (correct signed-by path)
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | \
+  sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+# 4) Update + install
 sudo apt update
-sudo apt install jenkins -y
+sudo apt install -y jenkins
 
 # Installing Docker
 sudo apt update
